@@ -1,0 +1,84 @@
+html, body {
+	margin:0;
+	padding:0;
+	font: 14px/1.6 Helvetica Neue, Helvetica, Arial, sans-serif;
+	color:#444;
+}
+
+.center {
+	text-align:center;
+}
+
+.tools {
+	padding:10px;
+	text-align:center;
+	border-bottom:1px solid #eee;
+	margin-bottom:10px;
+}
+
+.tools button {
+	display:inline-block;
+}
+
+.viewer {
+	margin-bottom:20px;
+}
+
+.slide {
+	width: 300px;
+	margin:10px auto;
+}
+
+.slide h1 {
+	background-color:#333;
+	color:#fff;
+	font-size:18px;
+	padding:5px 10px;
+	margin:0 0 1px;
+
+	-webkit-border-radius: 5px 5px 0 0;
+	border-radius: 5px 5px 0 0;
+}
+
+.slide .walkthrough-close {
+	background-color:#888;
+	font-size:10px;
+	text-transform:uppercase;
+	font-weight:bold;
+	cursor: pointer
+	-webkit-border-radius:0 0 5px 5px;
+	border-radius:0 0 5px 5px;
+}
+
+.slide .walkthrough-close:hover {
+	background-color:#000;
+}
+
+a:link,
+a:visited,
+.walkthrough-close {
+	display:block;
+	padding:5px 10px;
+	color:#fff;
+	background-color:#28a1e6;
+	margin-bottom:1px;
+	text-decoration:none;
+}
+
+a:hover {
+	background-color:#2182ba;
+}
+
+a.broken:link,
+a.broken:visited {
+	background-color:#f00;
+}
+
+a.broken:hover {
+	background-color:#f90;
+}
+
+a.external:link,
+a.external:visited {
+	opacity:.5;
+}

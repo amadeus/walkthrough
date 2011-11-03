@@ -1,0 +1,71 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+	<title>Walkthrough Tests</title>
+	<link rel="stylesheet" href="style.css" type="text/css" media="screen" charset="utf-8" />
+	<script src="dbg.js" type="text/javascript" charset="utf-8"></script>
+	<script src="mootools-core.js" type="text/javascript" charset="utf-8"></script>
+	<script src="mootools-more.js" type="text/javascript" charset="utf-8"></script>
+	<script src="Class.Binds.js" type="text/javascript" charset="utf-8"></script>
+	<script src="History.js" type="text/javascript" charset="utf-8"></script>
+
+	<script src="../Source/Walkthrough.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+<div class="tools">
+	<button id="create-walkthrough">Show Walkthrough</button>
+	<button id="hide-walkthrough">Hide Walkthrough</button>
+	<button id="hard-clean">Hard Clean</button>
+</div>
+
+<div id="viewer" class="viewer"><div class="slide center">Click Show Walkthrough button to start</div></div>
+
+<div id="content" class="content" style="display:none;">
+
+	<div class="slide" data-walkthrough-id="intro">
+		<h1 class="center">Welcome To Intro!</h1>
+		<div><a href="/walkthrough/screen2">Goto Screen 2 &rarr;</a></div>
+		<div><a href="http://google.com">Google.com &uarr;</a></div>
+	</div>
+
+	<div class="slide" data-walkthrough-id="screen2">
+		<h1 class="center">Screen 2</h1>
+		<div><a href="/walkthrough/screen3">Goto Screen 3 &rarr;</a></div>
+		<div><a href="/walkthrough/intro">Back to intro! &crarr;</a></div>
+		<div><a href="http://google.com" class="external">Google.com &uarr;</a></div>
+		<div class="walkthrough-close center">Hide Walkthrough</div>
+	</div>
+
+	<div class="slide" data-walkthrough-id="screen3">
+		<h1 class="center">Screen 3</h1>
+		<div><a href="/walkthrough/intro">Back to intro! &crarr;</a></div>
+		<div><a href="/walkthrough/intro1" class="broken">This link should break &rarr;</a></div>
+		<div><a href="http://google.com" class="external">Google.com &uarr;</a></div>
+		<div class="walkthrough-close center">Hide Walkthrough</div>
+	</div>
+
+</div>
+
+<script type="text/javascript" charset="utf-8">
+	window.addEvent('domready', function(){
+		var walkthrough,
+			createWalkthrough = function(){
+				walkthrough = new Walkthrough('viewer', 'content', {
+					onError: function(obj){
+						alert(obj.message + ' ' + obj.view);
+					}
+				});
+				document.id('hide-walkthrough').addEvent('click', walkthrough.hide.bind(walkthrough));
+				document.id('hard-clean').addEvent('click', walkthrough.hide.bind(walkthrough, true));
+			};
+
+		document.id('create-walkthrough').addEvent('click', function(){
+			if (walkthrough) walkthrough.displayView();
+			else createWalkthrough();
+		});
+	});
+</script>
+</body>
+</html>
