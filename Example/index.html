@@ -16,33 +16,33 @@
 <div class="tools">
 	<button id="create-walkthrough">Show Walkthrough</button>
 	<button id="hide-walkthrough">Hide Walkthrough</button>
-	<button id="hard-clean">Hard Clean</button>
+	<button id="clean-walkthrough">Clean Walkthrough</button>
 </div>
 
-<div id="viewer" class="viewer"><div class="slide center">Click Show Walkthrough button to start</div></div>
+<div id="viewer" class="viewer" data-walkthrough-id="walkthrough"><div class="slide center">Click Show Walkthrough button to start</div></div>
 
 <div id="content" class="content" style="display:none;">
 
-	<div class="slide" data-walkthrough-id="intro">
+	<div class="slide" data-walkthrough-slide-id="intro">
 		<h1 class="center">Welcome To Intro!</h1>
 		<div><a href="/walkthrough/screen2">Goto Screen 2 &rarr;</a></div>
 		<div><a href="http://google.com">Google.com &uarr;</a></div>
 	</div>
 
-	<div class="slide" data-walkthrough-id="screen2">
+	<div class="slide" data-walkthrough-slide-id="screen2">
 		<h1 class="center">Screen 2</h1>
 		<div><a href="/walkthrough/screen3">Goto Screen 3 &rarr;</a></div>
 		<div><a href="/walkthrough/intro">Back to intro! &crarr;</a></div>
 		<div><a href="http://google.com" class="external">Google.com &uarr;</a></div>
-		<div class="walkthrough-close center">Hide Walkthrough</div>
+		<div class="walkthrough-close center" data-walkthrough-close>Hide Walkthrough</div>
 	</div>
 
-	<div class="slide" data-walkthrough-id="screen3">
+	<div class="slide" data-walkthrough-slide-id="screen3">
 		<h1 class="center">Screen 3</h1>
 		<div><a href="/walkthrough/intro">Back to intro! &crarr;</a></div>
 		<div><a href="/walkthrough/intro1" class="broken">This link should break &rarr;</a></div>
 		<div><a href="http://google.com" class="external">Google.com &uarr;</a></div>
-		<div class="walkthrough-close center">Hide Walkthrough</div>
+		<div class="walkthrough-close center" data-walkthrough-close>Hide Walkthrough</div>
 	</div>
 
 </div>
@@ -52,16 +52,26 @@
 		var walkthrough,
 			createWalkthrough = function(){
 				walkthrough = new Walkthrough('viewer', 'content', {
+					onShow: function(view){
+						dbg.log('Showing: ' + view);
+					},
+					onHide: function(view){
+						dbg.log('Hiding: ' + view);
+					},
+					onNavigation: function(view){
+						dbg.log('Navigating to: ' + view);
+					},
 					onError: function(obj){
-						alert(obj.message + ' ' + obj.view);
+						dbg.log('This view does not exist: ' + obj.view);
 					}
 				});
 				document.id('hide-walkthrough').addEvent('click', walkthrough.hide.bind(walkthrough));
-				document.id('hard-clean').addEvent('click', walkthrough.hide.bind(walkthrough, true));
+				document.id('clean-walkthrough').addEvent('click', walkthrough.clean.bind(walkthrough));
+				dbg.log(walkthrough);
 			};
 
 		document.id('create-walkthrough').addEvent('click', function(){
-			if (walkthrough) walkthrough.displayView();
+			if (walkthrough) walkthrough.show();
 			else createWalkthrough();
 		});
 	});
