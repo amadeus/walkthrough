@@ -3,7 +3,7 @@
 
 name: Walkthrough
 
-description: A class that allows for a wizard like experience, driven by the html. Please note that Class.Binds from PowerTools is required, not
+description: A class that allows for a wizard like experience, driven by the html. Please note that Class.Binds from PowerTools is required, not MooTool More Class.Binds
 
 license: MIT-style license.
 
