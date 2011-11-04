@@ -45,7 +45,7 @@ html, body {
 	font-size:10px;
 	text-transform:uppercase;
 	font-weight:bold;
-	cursor: pointer
+	cursor: pointer;
 	-webkit-border-radius:0 0 5px 5px;
 	border-radius:0 0 5px 5px;
 }
