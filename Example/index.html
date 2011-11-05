@@ -30,11 +30,25 @@
 	</div>
 
 	<div class="slide" data-walkthrough-slide-id="screen2">
+		<script type="text/javascript" charset="utf-8">
+			Walkthrough.addEvent('walkthrough.screen2.inject', function(){
+				new Fx.Tween('test-event', {
+					fps: 1000,
+					duration: 2000
+				}).start('opacity', 0, 1);
+			});
+			Walkthrough.addEvent('walkthrough.screen2.dispose', function(){
+				dbg.log('This is a dispose event');
+			});
+			Walkthrough.addEvent('walkthrough.screen2.clean', function(){
+				dbg.log('This is a clean event');
+			});
+		</script>
 		<h1 class="center">Screen 2</h1>
 		<div><a href="/walkthrough/screen3">Goto Screen 3 &rarr;</a></div>
 		<div><a href="/walkthrough/intro">Back to intro! &crarr;</a></div>
 		<div><a href="http://google.com" class="external">Google.com &uarr;</a></div>
-		<div class="walkthrough-close center" data-walkthrough-close>Hide Walkthrough</div>
+		<div class="walkthrough-close center" id="test-event" data-walkthrough-close>Hide Walkthrough</div>
 	</div>
 
 	<div class="slide" data-walkthrough-slide-id="screen3">

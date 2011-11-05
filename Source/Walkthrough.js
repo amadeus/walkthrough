@@ -26,6 +26,7 @@ var Walkthrough = this.Walkthrough = new Class({
 		startsWith: 'intro'
 	},
 
+	name: null,
 	views: {},
 	currentView: {},
 
@@ -34,6 +35,7 @@ var Walkthrough = this.Walkthrough = new Class({
 		this.setOptions(options);
 		if (!this.viewer) return;
 
+		this.name = this.viewer.get('data-' + this.options.prefix + '-id');
 		if (content) {
 			content = document.id(content).dispose();
 			this.addViews(content);
@@ -92,11 +94,13 @@ var Walkthrough = this.Walkthrough = new Class({
 		this._cleanView();
 
 		this.currentView = new View(view, this.views[view], {
+			container: this.viewer,
+			name: this.name,
 			prefix: this.options.prefix,
 			urlPrefix: this.options.urlPrefix,
 			onNavigation: this.bound('_displayView'),
 			onClose: this.bound('hide')
-		}).inject(this.viewer);
+		});
 
 		this.fireEvent('navigation', this.currentView.name);
 	},
@@ -110,17 +114,67 @@ var Walkthrough = this.Walkthrough = new Class({
 	}
 });
 
+var SlideEvents = {};
+
+Walkthrough.extend({
+
+	addEvent: function(keys, fn){
+		keys = keys.split('.');
+		var walkthrough = keys[0],
+			slide = keys[1],
+			event = keys[2];
+
+		if (!SlideEvents[walkthrough]) SlideEvents[walkthrough] = {};
+		if (!SlideEvents[walkthrough][slide]) SlideEvents[walkthrough][slide] = new Events();
+
+		SlideEvents[walkthrough][slide].addEvent(event, fn);
+
+		return Walkthrough;
+	},
+
+	removeEvent: function(keys, fn){
+		keys = keys.split('.');
+		var walkthrough = keys[0],
+			slide = keys[1],
+			event = keys[2];
+
+		if (!SlideEvents[walkthrough] || !SlideEvents[walkthrough][slide]) return Walkthrough;
+
+		SlideEvents[walkthrough][slide].removeEvent(event, fn);
+
+		return Walkthrough;
+	},
+
+	fireEvent: function(keys, args){
+		keys = keys.split('.');
+		var walkthrough = keys[0],
+			slide = keys[1],
+			event = keys[2];
+
+		if (!SlideEvents[walkthrough] || !SlideEvents[walkthrough][slide]) return Walkthrough;
+
+		SlideEvents[walkthrough][slide].fireEvent(event, args);
+
+		return Walkthrough;
+	}
+
+});
+
+Walkthrough.addEvents = Walkthrough.addEvent.overloadSetter();
+Walkthrough.removeEvents = Walkthrough.removeEvent.overloadSetter();
+Walkthrough.addEvents = Walkthrough.fireEvent.overloadSetter();
+
 var View = Walkthrough.View = new Class({
 
 	Implements: [Options, Events, Class.Binds],
 
 	options: {
+		name: null,
 		prefix: 'walkthrough',
 		urlPrefix: 'walkthrough'
 	},
 
 	name: null,
-	classes: [],
 
 	initialize: function(name, el, options){
 		this.name = name;
@@ -128,28 +182,26 @@ var View = Walkthrough.View = new Class({
 		this.setOptions(options);
 		this.el.addEvent('click:relay(a)', this.bound('_linkHandler'));
 		this.el.addEvent('click:relay([data-' + this.options.prefix + '-close])', this.bound('_closeView'));
+		this.inject();
+		Walkthrough.fireEvent(this._getEventKey('inject'), this.el);
 	},
 
-	inject: function(container){
-		this.el.inject(container);
+	inject: function(){
+		this.el.inject(this.options.container);
 		return this;
 	},
 
 	dispose: function(){
+		Walkthrough.fireEvent(this._getEventKey('dispose'), this.el);
 		this.el.dispose();
 		return this;
 	},
 
 	clean: function(){
-		this.classes.each(function(cls){
-			if (cls && cls.clean) cls.clean();
-		});
-
+		Walkthrough.fireEvent(this._getEventKey('clean'), this.el);
 		if (this.el) this.el.destroy();
-
 		delete this.name;
 		delete this.el;
-		delete this.classes;
 		delete this.clean;
 		return this;
 	},
@@ -160,11 +212,15 @@ var View = Walkthrough.View = new Class({
 	},
 
 	_linkHandler: function(e, el){
-		var paths = Walkthrough.View.getPaths(el.get('href'));
+		var paths = View.getPaths(el.get('href'));
 		if (paths[0] === this.options.urlPrefix) {
 			e.preventDefault();
 			return this.fireEvent('navigation', paths[1]);
 		}
+	},
+
+	_getEventKey: function(event){
+		return this.options.name + '.' + this.name + '.' + event;
 	}
 });
 
