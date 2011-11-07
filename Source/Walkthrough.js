@@ -35,7 +35,8 @@ var Walkthrough = this.Walkthrough = new Class({
 		this.setOptions(options);
 		if (!this.viewer) return;
 
-		this.name = this.viewer.get('data-' + this.options.prefix + '-id');
+		this.name = this.viewer.get('data-' + this.options.prefix + '-id') || String.uniqueID();
+
 		if (content) {
 			content = document.id(content).dispose();
 			this.addViews(content);
