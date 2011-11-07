@@ -162,7 +162,7 @@ Walkthrough.extend({
 
 Walkthrough.addEvents = Walkthrough.addEvent.overloadSetter();
 Walkthrough.removeEvents = Walkthrough.removeEvent.overloadSetter();
-Walkthrough.addEvents = Walkthrough.fireEvent.overloadSetter();
+Walkthrough.fireEvents = Walkthrough.fireEvent.overloadSetter();
 
 var View = Walkthrough.View = new Class({
 
